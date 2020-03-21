@@ -1,0 +1,42 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::get('/', function () {
+    return view('welcome');
+});
+Auth::routes();
+
+Route::post('/tweet/{id}/act', 'LikeController@actOnTweet');
+
+Route::get('profile/{profileId}/follow', 'FollowUnfollowController@followprofile')->name('profile.follow');
+
+Route::get('/{profileId}/unfollow', 'FollowUnfollowController@unFollowprofile')->name('profile.unfollow');
+
+
+Route::get('profile/{id}', 'ProfilesController@show');
+
+Route::get('tweet/{id}', 'TasksController@show');
+
+Route::get('comment/like/{id}', ['as' => 'comment.like', 'uses' => 'LikeController@likeComment']);
+
+Route::get('tweet/like/{id}', ['as' => 'tweet.like', 'uses' => 'LikeController@likePost']);
+
+
+Route::get('tweets/{tweet}/profiles/{profile}/comments/{comment}', function ($tweetId, $profileId, $commentId) {} );
+
+Route::resource('tweet', 'TasksController');
+Route::resource('profiles', 'ProfilesController');
+Route::resource('comments', 'CommentController');
+
