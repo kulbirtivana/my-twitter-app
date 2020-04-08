@@ -7,7 +7,7 @@
             @csrf
             <div class="form-group">
                 <input type="text" name="content" class="form-control" />
-                <input type="hidden" name="post_id" value="{{ $post_id }}" />
+                <input type="hidden" name="tweet_id" value="{{ $tweet_id }}" />
                 <input type="hidden" name="parent_id" value="{{ $comment->id }}" />
             </div>
             @auth

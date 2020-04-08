@@ -7,16 +7,20 @@ Create Tweet Form
 <p>What's on your mind</p>
 
 @include('partials.errors')
-<form method="post" action="{{ route('tweet.store')}}">
+<form method="post" action="{{ route('tweet.store')}}" enctype="multipart/form-data">>
 	@csrf
 	<label for ="message">
 		<strong>Input a Message:</strong>
 		<textarea name="message" id="message" cols="30" rows="10"></textarea>
 	</label>
-	<label for ="author">
-		{{--<strong>Author name:</strong>
-			<input type="text" name="author" id="author">
-		</label>--}}
-		<input type="submit" Value="Publish Tweet">
+   <label for="picture">
+    <strong>Select image to upload:</strong>
+    <br>
+    <input type="file" name="picture" id="picture">
+	</label>
+<input type="submit" Value="Publish Tweet">
+ <div class="form-group container h-100">
+        <input class="btn btn-primary btn-customized align-bottom" type="submit" value="Publish Post">
+    </div>
 	</form>
 	@endsection

@@ -9,13 +9,13 @@
         </li>
 
         <li class="nav-item">
-            <a class="navbar-brand" href="{{ route( 'tweets.index') }}">
+            <a class="navbar-brand" href="{{ route( 'tweet.index') }}">
             Home
             </a>
         </li>
         @auth
         <li class="nav-item">
-        <a class="navbar-brand" href="{{ route( 'tweets.create') }}">
+        <a class="navbar-brand" href="{{ route( 'tweet.create') }}">
             Create Post
             </a>
         </li>

@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Auth;
 use App\tweet;
 use App\profile;
 use App\User;
 use App\Comment;
-use Auth;
+use App\FollowUnfollow; 
 
 
 class TasksController extends Controller
@@ -21,10 +22,39 @@ class TasksController extends Controller
     {
         //
        $tweets = tweet::query()
-        ->join('users', 'tweets.user_id', '=', 'users.id')->get();
+        ->join('users', 'tweets.profile_id', '=', 'users.id')->get();
         return view('tweet.index', compact('tweets'));
 
+        // if( $user = Auth::user() )
+        // {
+        //     $profile = profile::findOrFail();
 
+        //    $follower = FollowUnfollow::where("profile_id", "=", $profile->id)->find('followed');
+
+        //     $tweets = tweet::query( )
+        //     ->join( 'profiles', 'tweets.profile_id', '=', 'profiles.id' )
+        //     ->select( 'tweets.id',
+        //     'profiles.id as profile_ID',
+        //     'profiles.name',
+        //     'profiles.about_user',
+        //     'profiles.photo',
+        //     'tweets.posted_at',
+        //     'tweets.message',
+        //     'tweets.photo',
+        //     'tweets.likes_count' )
+        //     ->orderBy('posts.id', 'desc')
+        //     ->get(); 
+            
+        //     $post = tweet::where("profile_id", "=", $profile->id)->first();   
+
+        // return view('tweet.index', compact('tweets', 'profile')  );
+
+        // }  else 
+        //     $tweets = tweet::query( )
+        //         ->join( 'profiles', 'tweets.profile_id', '=', 'profiles.id' )
+        //         ->get(); 
+
+        //     return view('tweet.index', compact('tweets'));
     }
 
     /**
@@ -56,8 +86,9 @@ class TasksController extends Controller
         $validatedData = $request->validate(array(
             'message' => 'required|max:255'
         ));
+        $profile = profile::where("user_id", "=", $user->id)->firstOrFail();
         $tweet = new tweet;
-        $tweet->user_id = $user->id;
+        $tweet->profile_id = $profile->id;
         $tweet->message = $validatedData['message'];
 
         $tweet->save();  
@@ -77,17 +108,17 @@ class TasksController extends Controller
     {
         //
         $tweet = tweet::findOrFail($id);
-        $tweetUser = $tweet->user()->get()[0];
+
+        $profile = profile::findOrFail($tweet->profile_id);
         return view('tweet.show', compact('tweet'),
-        compact('tweetUser'));
+        compact('profile'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+         //* Show the form for editing the specified resource.
+     //*
+     //@param  int  $id
+     //* @return \Illuminate\Http\Response
+     //*/
     public function edit($id)
     {
         //
@@ -108,12 +139,15 @@ class TasksController extends Controller
     public function update(Request $request, $id)
     {
         //
+        if( $user = Auth::user()){
         $validatedData = $request->validate(array(
             'message' => 'required|max:255',
         ));
 
         tweet::whereId($id)->update($validatedData);
         return redirect('/tweet')->with('success', 'Tweet Updated');
+    }
+    return redirect('tweet');
 
 
     }
@@ -133,5 +167,12 @@ class TasksController extends Controller
             return redirect('/tweet')->with('success', 'Tweet deleted');
         }
         return redirect('/tweet');
+    }
+
+    public function showProfile($id)
+    {
+        $profiles = profile::query()
+        ->join('profiles', 'tweets.profile_id', '=', 'profiles.id')
+        ->get();
     }
 }

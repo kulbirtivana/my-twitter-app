@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Like:
 use Illuminate\Http\Request;
 
 class LikeController extends Controller
@@ -18,7 +19,8 @@ class LikeController extends Controller
     		tweet::where('id', $id)->decrement('likes_count');
     		break;
     	}
-    	event(new PostAction($id, $action));
+    	event(new TweetAction($id, $action))
+        ->toOthers();
     	return '';
     }
 }
