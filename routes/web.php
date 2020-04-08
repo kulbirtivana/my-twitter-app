@@ -20,14 +20,14 @@ Auth::routes();
 
 Route::post('/tweet/{id}/act', 'LikeController@actOnTweet');
 
-Route::get('profile/{profileId}/follow', 'FollowUnfollowController@followprofile')->name('profile.follow');
+Route::get('profile/{profileId}/follow', 'FollowUnfollowController@followProfile')->name('profile.follow');
 
-Route::get('/{profileId}/unfollow', 'FollowUnfollowController@unFollowprofile')->name('profile.unfollow');
+Route::get('/{profileId}/unfollow', 'FollowUnfollowController@unfollowProfile')->name('profile.unfollow');
 
 
-Route::get('profile/{id}', 'ProfilesController@show');
+Route::get('profile/{id}', 'ProfilesController@showPost');
 
-Route::get('tweet/{id}', 'TasksController@show');
+Route::get('tweet/{id}', 'TasksController@showProfile');
 
 Route::get('comment/like/{id}', ['as' => 'comment.like', 'uses' => 'LikeController@likeComment']);
 

@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Faker\Factory;
+use App\Profile;
 
 class TweetsTableSeeder extends Seeder
 {
@@ -12,12 +14,16 @@ class TweetsTableSeeder extends Seeder
     public function run()
     {
         //
-       $faker = Faker\Factory::create();
+       $faker = Factory::create();
 
-        foreach(range(1, 25 ) as $index){
+        foreach(range(1, 40 ) as $index){
             DB::table( 'tweets')->insert(array(
-                'user_id' => rand(1,25),
-                'message' => $faker->catchphrase
+                'message' => $faker->paragraph,
+                'photo' => $faker->imageURL($width = 600, $height = 480),
+                'profile_id' => $faker->randomElement(profile::pluck( 'id' )->toArray()), 
+                'likes_count' => $faker->randomDigitNotNull,
+                'posted_at' => $faker->dateTimeThisYear(),
+
             ));
         }
     }

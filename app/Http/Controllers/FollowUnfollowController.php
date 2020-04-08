@@ -13,9 +13,12 @@ use App\Comment;
 class FollowUnfollowController extends Controller
 {
     //
-    public function followProfile($id)
+
+    public function followProfile(int $id)
     {
-    	$profile = profile::where("user_id", "=", $id)->firstOrFail();
+      if ( $user = Auth::user())
+      {
+    	$profile = profile::findOrFail($id);
 
     	$follower = New FollowUnfollow;
     	$follower->profile_id = $id;
@@ -23,15 +26,19 @@ class FollowUnfollowController extends Controller
     	$follower->followed = 1;
     	$follower->save();
 
+    	$following = FollowUnfollow::where ('followed', '==', 1);
+
     	return redirect('/tweet')->with('success', 'Started following');
-    
+    }
+    return redirect('tweet');
+    	
     }
 
-	public function UnfollowProfile($id)
+	public function unfollowProfile($id)
 	{
 		if ($user = Auth::user())
 		{
-			$profile = profile::where("user_id", "=", $id)->firstOrFail();
+			$profile = profile::where("user_id", "=", $user->id)->firstOrFail();
 
 			$follower = FollowUnfollow::where('profile_id', '=', $id )
 			->where('follower_id', $profile->id)
@@ -40,4 +47,11 @@ class FollowUnfollowController extends Controller
 			return redirect('/tweet')->with('success', 'Unfollow the profile');
 		}
 	}
+	public function Following($id)
+    {
+       if ( $user = Auth::user() ) 
+       {
+           $following = FollowUnfollow::where('followed', '=', 1);
+       }
+   }
 }

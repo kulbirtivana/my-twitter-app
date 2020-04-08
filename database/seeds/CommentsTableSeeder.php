@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Seeder;
 use Faker\Factory;
-use App\Profile;
-use App\Post;
+use App\profile;
+use App\tweet;
 
 class CommentsTableSeeder extends Seeder
 {
@@ -21,6 +21,7 @@ class CommentsTableSeeder extends Seeder
         	DB::table('comments')->insert(array(
         		'content' => $faker->paragraph,
         		'profile_id' => $faker->randomElement(profile::pluck('id')->toArray()),
+                'tweet_id' => $faker->randomElement(tweet::pluck('id')->toArray()),
         	));
         }
     }

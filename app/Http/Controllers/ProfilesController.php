@@ -26,6 +26,7 @@ class ProfilesController extends Controller
         ->get();
 
         $tweets = tweet::all();
+
         return view('profiles.index', compact('profiles', 'tweets'));
 
     }
@@ -60,6 +61,10 @@ class ProfilesController extends Controller
                 'name' => 'required|max:25',
                 'about_user' => 'max:255'
             ));
+            $user = Auth::user();
+
+            $profile = profile::where("user_id", "=", $user->id)->firstOrFail();
+
 
             $profile->user_id = $user->id;
             $profile->name = $validatedData['name'];
@@ -83,18 +88,18 @@ class ProfilesController extends Controller
         //
         $user = Auth::user();
 
-        $profile = profile::where("profile_id", "=", $user->id)->findOrFail();
+        $profile = profile::findOrFail($id);
         $tweet = tweet::findOrFail($id);
         $tweets = tweet::query()
         ->join('profiles', 'tweets.profile_id', '=', 'profiles.id')
         ->select( 'tweets.id',
-            'profiles.id',
+            'profiles.id as profile_ID',
             'profiles.name',
             'profiles.about_user',
             'profiles.photo as profile_picture',
             'tweets.message',
-            'tweets.likes_count',)
-       // ->orderBy('tweets.id', 'desc')
+            'tweets.likes_count')
+       ->orderBy('tweets.id', 'desc')
         ->get();
         return view('profiles.show', compact('profile', 'tweet', 'tweets'));
             
@@ -112,9 +117,9 @@ class ProfilesController extends Controller
     {
         //
         if ($user = Auth::user()){
-            $user = profile::findOrFail($id);
+            $profile = profile::findOrFail($id);
 
-            return view('profiles.edit', compact('user'));
+            return view('profiles.edit', compact('profile'));
         }
         return redirect('/tweet');
     }
@@ -156,7 +161,22 @@ class ProfilesController extends Controller
             return redirect('/tweet')->with('success', 'Profile deleted.');
         }
         return redirect('/tweet');
-        } 
+    } 
+
+    public function showPost($id)
+    {
+        $tweets = tweet::query( )
+        ->join( 'tweets', 'tweets.profile_id', '=', 'profiles.id' ) 
+        ->get(); 
+
+    }
+
+    public function getUserByUsername($username)
+    {
+        return User::with('profile')->wherename($username)->firstOrFail();
+    }
+
+
         public function followProfile($id)
     {
         $follow = New FollowUnfollow;

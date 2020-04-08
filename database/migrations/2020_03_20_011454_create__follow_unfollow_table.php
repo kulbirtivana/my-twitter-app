@@ -25,8 +25,8 @@ class CreateFollowUnfollowTable extends Migration
             ->on( 'profiles' )
             ->onDelete( 'cascade' );
 
-            $table->foreign( 'profile_id' )
-            ->references( 'id' )
+           $table->foreign( 'profile_id' )
+           ->references( 'id' )
             ->on( 'profiles' )
             ->onDelete( 'cascade' );
         });

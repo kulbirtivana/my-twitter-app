@@ -29,7 +29,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo=('/tweet');
 
     /**
      * Create a new controller instance.
@@ -69,5 +69,14 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+
+        profile::create([
+            'name' => 'Please update your profile',
+            'about_user' => 'You can enter about yourself',
+            'photo' => 'photo',
+            'user_id' => $user->id
+        ]);
+
+        return $user;
     }
 }

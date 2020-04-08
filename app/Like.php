@@ -11,7 +11,7 @@ class Like extends Model
 
         public function profiles()
         {
-        	return $this->nelongsTo(profile::class);
+        	return $this->belongsTo(profile::class);
         }
 
         use SoftDeletes;
