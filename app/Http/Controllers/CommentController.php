@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\tweet;
 use Auth;
-use App\profile;
+use App\Profile;
 use App\Comment;
 
 class CommentController extends Controller
@@ -70,8 +70,10 @@ class CommentController extends Controller
     {
         //
         $comment = Comment::findOrFail($id);
-        $profileUser = $profile->user()->get()[0];
-        return view('comments.show', compact('comment'), compact('profileUser'));
+        $tweet = tweet::findOrFail($id);
+        $profileUser = profile::findOrFail($tweet->profile_id)
+       //$profileUser = $profile->user()->get()[0];
+        return view('comments.show', compact('comment'));
     }
 
     /**

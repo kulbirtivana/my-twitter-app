@@ -58,12 +58,16 @@ Twitter
 	@foreach($tweets as $tweet)
 
 	<li>
-
 		<h2>{{$tweet->name }}</h2>
                   
-		<p>
-			{{$tweet->message}}
-		</p>
+		    <p>
+                @if($tweet->is_gif == TRUE )
+                <img src="{{ $tweet->message }}">
+                @else
+                {{ $tweet->message }}
+                @endif
+                
+		    </p>
 			<div class="float-none">
                     @if($follower ?? '') 
                     <small>Unfollow</small>
@@ -72,13 +76,13 @@ Twitter
                     <small>Follow</small>
 
                     @endif
-		<ul>
-			<li>
+		        <ul>
+		    	<li>
 				@auth
-	<a href="{{route('tweet.edit', $tweet->id) }}">Edit Tweet</a>
-			</li>
-	<li>
-	<form action="{{ route('tweet.destroy', $tweet->id)}}" method="post">
+	            <a href="{{route('tweet.edit', $tweet->id) }}">Edit Tweet</a>
+		    	</li>
+	            <li>
+	            <form action="{{ route('tweet.destroy', $tweet->id)}}" method="post">
 		@csrf
 		@method('DELETE')
 	<input type="submit" value="Delete Tweet">

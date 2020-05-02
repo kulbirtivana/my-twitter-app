@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 Route::get('/', function () {
     return view('welcome');
@@ -27,7 +30,7 @@ Route::get('/{profileId}/unfollow', 'FollowUnfollowController@unfollowProfile')-
 
 Route::get('profile/{id}', 'ProfilesController@showPost');
 
-Route::get('tweet/{id}', 'TasksController@showProfile');
+// Route::get('tweet/{id}', 'TasksController@showProfile');
 
 Route::get('comment/like/{id}', ['as' => 'comment.like', 'uses' => 'LikeController@likeComment']);
 

@@ -20,6 +20,7 @@ class CreateTweetTable extends Migration
             $table->unsignedBigInteger( 'profile_id' )->nullable();
             $table->timestamp('posted_at');
             $table->integer('likes_count')->default(0);
+            $table->boolean('is_gif')->default ( false );
             $table->softDeletes();
 
            // $table->foreign( 'profile_id' )

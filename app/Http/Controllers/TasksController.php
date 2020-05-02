@@ -22,7 +22,10 @@ class TasksController extends Controller
     {
         //
        $tweets = tweet::query()
-        ->join('users', 'tweets.profile_id', '=', 'users.id')->get();
+
+        ->join('users', 'tweets.profile_id', '=', 'users.id')
+        ->select('tweets.id', 'users.id as user_id', 'tweets.message', 'tweets.is_gif', 'users.name')
+        ->get();
         return view('tweet.index', compact('tweets'));
 
         // if( $user = Auth::user() )
@@ -63,6 +66,7 @@ class TasksController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
+    
     {
         //
         $user = Auth::user();
@@ -90,7 +94,9 @@ class TasksController extends Controller
         $tweet = new tweet;
         $tweet->profile_id = $profile->id;
         $tweet->message = $validatedData['message'];
-
+        if ( isset ( $request->is_gif) && ( $request->is_gif === 'true' )) {
+            $input['is_gif'] = 1;
+        }
         $tweet->save();  
  
         return redirect('/tweet')->with('success', 'Tweet saved');
@@ -139,12 +145,23 @@ class TasksController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $tweet = tweet::findOrFail($id);
+
         if( $user = Auth::user()){
         $validatedData = $request->validate(array(
             'message' => 'required|max:255',
         ));
 
         tweet::whereId($id)->update($validatedData);
+
+        if ( isset ( $request->is_gif) && ( $request->is_gif === 'true' )) {
+            $tweet->is_gif = TRUE;
+        }
+        else
+        $tweet->is_gif = FALSE;
+
+        $tweet->save(); 
+        
         return redirect('/tweet')->with('success', 'Tweet Updated');
     }
     return redirect('tweet');
@@ -172,7 +189,7 @@ class TasksController extends Controller
     public function showProfile($id)
     {
         $profiles = profile::query()
-        ->join('profiles', 'tweets.profile_id', '=', 'profiles.id')
+        ->join('tweets', 'tweets.profile_id', '=', 'profiles.id')
         ->get();
     }
 }
