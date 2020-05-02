@@ -5,6 +5,8 @@
  */
 
 require('./bootstrap');
+require('gsap');
+require('scrollmagic');
 
 window.Vue = require('vue');
 
